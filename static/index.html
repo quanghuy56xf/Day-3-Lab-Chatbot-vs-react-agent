@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trợ Lý BĐS Vinhomes Ocean Park</title>
+    <meta name="description" content="Trợ lý AI tư vấn bất động sản Vinhomes Ocean Park 1 - Powered by ReAct Agent">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Background animated particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🏠</div>
+                    <div class="logo-text">
+                        <h1>VinHomes AI</h1>
+                        <span class="logo-subtitle">Ocean Park 1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="section-title">📊 Thống kê phiên</h3>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="statRequests">0</span>
+                        <span class="stat-label">Requests</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="statTokens">0</span>
+                        <span class="stat-label">Tokens</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="statLatency">0ms</span>
+                        <span class="stat-label">TB Latency</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="statCost">$0</span>
+                        <span class="stat-label">Chi phí</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="section-title">⚡ Gợi ý câu hỏi</h3>
+                <div class="suggestions" id="suggestionsContainer">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="model-badge" id="modelBadge">
+                    <span class="model-dot"></span>
+                    <span id="modelName">Gemini 2.5 Flash</span>
+                </div>
+                <div class="powered-by">Powered by ReAct Agent</div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <!-- Top bar -->
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-bar-title">
+                    <h2>Trợ Lý Tư Vấn BĐS</h2>
+                    <span class="status-indicator">
+                        <span class="status-dot online"></span>
+                        Online
+                    </span>
+                </div>
+                <div class="mode-toggle" id="modeToggle">
+                    <button class="mode-btn active" data-mode="agent" id="modeAgent">🧠 Agent</button>
+                    <button class="mode-btn" data-mode="chatbot" id="modeChatbot">🤖 Chatbot</button>
+                </div>
+                <button class="clear-chat-btn" id="clearChatBtn" title="Xoá lịch sử chat">
+                    🗑️
+                </button>
+            </header>
+
+            <!-- Chat Messages -->
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-icon">🏙️</div>
+                    <h2>Xin chào! Tôi là Trợ lý BĐS AI</h2>
+                    <p>Tôi có thể giúp bạn tìm kiếm, phân tích giá và tư vấn căn hộ tại <strong>Vinhomes Ocean Park 1</strong>.</p>
+                    <div class="welcome-features">
+                        <div class="feature-card" data-query="Tìm căn STUDIO hướng Tây Nam tại The London giá dưới 2.2 tỷ">
+                            <div class="feature-icon">🔍</div>
+                            <div class="feature-text">
+                                <strong>Tìm kiếm</strong>
+                                <span>Tìm căn hộ theo giá, loại, hướng</span>
+                            </div>
+                        </div>
+                        <div class="feature-card" data-query="Giá trung bình căn 2PN ở The Paris là bao nhiêu?">
+                            <div class="feature-icon">📈</div>
+                            <div class="feature-text">
+                                <strong>Phân tích</strong>
+                                <span>Thống kê giá thị trường</span>
+                            </div>
+                        </div>
+                        <div class="feature-card" data-query="Cho tôi xem chi tiết căn hộ mã 5PDVUJ">
+                            <div class="feature-icon">📋</div>
+                            <div class="feature-text">
+                                <strong>Chi tiết</strong>
+                                <span>Xem thông tin & liên hệ chủ nhà</span>
+                            </div>
+                        </div>
+                        <div class="feature-card" data-query="So sánh giá căn 3PN giữa The Paris và The Beverly">
+                            <div class="feature-icon">⚖️</div>
+                            <div class="feature-text">
+                                <strong>So sánh</strong>
+                                <span>So sánh giá giữa các phân khu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages" id="messages">
+                    <!-- Chat messages rendered here -->
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea
+                        id="messageInput"
+                        placeholder="Hỏi về căn hộ Vinhomes Ocean Park..."
+                        rows="1"
+                        maxlength="1000"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" aria-label="Gửi tin nhắn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="char-count"><span id="charCount">0</span>/1000</span>
+                    <span class="response-time" id="responseTime"></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
